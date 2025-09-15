@@ -74,6 +74,7 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
 
     // Check if file was uploaded
     if (!req.file) {
+      console.log('No audio file provided in the request');
       return res.status(400).json({
         error: 'No audio file provided. Please upload a .wav file using the "audio" field.'
       });
@@ -100,6 +101,7 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
 
     // Check if transcription failed
     if (transcript.status === "error") {
+      console.log('Transcription failed:', transcript.error);
       throw new Error(`Transcription failed: ${transcript.error}`);
     }
     console.log("Transcription successful");
@@ -168,11 +170,14 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
       });
       return;
     }
-
+    
+    console.log("Sending NO")
     res.json({
       success: true,
       command: "NO",
     });
+
+    console.log("==================================================")
 
 
 
