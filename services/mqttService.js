@@ -1,10 +1,11 @@
 const mqtt = require('mqtt');
 
 class MQTTService {
-  constructor(brokerUrl) {
+  constructor(brokerUrl, topic_prefix) {
     this.brokerUrl = brokerUrl;
     this.client = null;
     this.isConnected = false;
+    this.topic_prefix = topic_prefix;
   }
 
   connect() {
@@ -40,6 +41,8 @@ class MQTTService {
       return false;
     }
 
+    topic = `${this.topic_prefix}/${topic}`;
+    console.log(`📤 Publishing MQTT message: "${message}" to topic: "${topic}"`);
     this.client.publish(topic, message, options, (error) => {
       if (error) {
         console.error('❌ Error publishing MQTT message:', error);
@@ -56,6 +59,9 @@ class MQTTService {
       console.error('❌ MQTT client not connected. Cannot subscribe to topic:', topic);
       return false;
     }
+
+    topic = `${this.topic_prefix}/${topic}`;
+    console.log(`📥 Subscribing to topic: "${topic}"`);
 
     this.client.subscribe(topic, (error) => {
       if (error) {
@@ -81,6 +87,9 @@ class MQTTService {
       console.error('❌ MQTT client not connected. Cannot unsubscribe from topic:', topic);
       return false;
     }
+
+    topic = `${this.topic_prefix}/${topic}`;
+    console.log(`📤 Unsubscribing from topic: "${topic}"`);
 
     this.client.unsubscribe(topic, (error) => {
       if (error) {

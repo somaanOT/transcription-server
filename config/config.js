@@ -14,6 +14,7 @@ const config = {
   // MQTT configuration
   mqtt: {
     brokerUrl: process.env.MQTT_BROKER_URL,
+    topic_prefix: "eutopia"
   },
 
   // File upload configuration

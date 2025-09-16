@@ -44,7 +44,7 @@ A modular Node.js server that transcribes audio files using AssemblyAI and publi
 The server uses a dynamic MQTT service that allows publishing to any topic with any message.
 
 ### Default Behavior
-The transcription endpoint publishes to the MQTT topic `command` with the following values:
+The transcription endpoint publishes to the MQTT topic `{topic_prefix}/command` (e.g., `eutopia/command`) with the following values:
 
 - `TEST` - When the endpoint is hit
 - `YES` - When help keywords are detected in transcription
@@ -114,6 +114,7 @@ All configuration is managed in `config/config.js` and can be overridden with en
 - `ASSEMBLY_AI_API_KEY` - AssemblyAI API key (required)
 - `MQTT_BROKER_URL` - MQTT broker URL (default: mqtt://localhost:52000)
 - `MQTT_TOPIC` - MQTT topic for publishing (default: command)
+- `MQTT_TOPIC_PREFIX` - MQTT topic prefix (default: eutopia)
 
 ## 📁 File Management
 

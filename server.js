@@ -15,7 +15,7 @@ const app = express();
 const PORT = config.server.port;
 
 // Initialize services
-const mqttService = new MQTTService(config.mqtt.brokerUrl);
+const mqttService = new MQTTService(config.mqtt.brokerUrl, config.mqtt.topic_prefix);
 const transcriptionService = new TranscriptionService(config.assemblyai.apiKey);
 
 // Configure multer for file uploads
@@ -84,7 +84,6 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
     // Check if file was uploaded
     if (!req.file) {
       console.log('❌ No audio file provided');
-      mqttService.publish("command", "NO_FILE");
       return res.status(400).json({
         success: false,
         error: 'No audio file provided. Please upload a .wav file using the "audio" field.'
@@ -134,15 +133,15 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
 
     // Analyze transcription and publish result
     const command = transcriptionService.analyzeTranscription(transcript.text);
+
+    // Let the device know the command result
     mqttService.publish("command", command);
 
     console.log("=".repeat(50));
 
   } catch (error) {
     console.error('❌ Error Occurred:', error);
-    
-    // Publish error message via MQTT
-    mqttService.publish("command", "ERROR");
+
     
     // Save the audio file even if transcription failed
     if (req.file && require('fs').existsSync(req.file.path)) {
