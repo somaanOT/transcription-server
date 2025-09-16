@@ -71,6 +71,14 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
   try {
     console.log("==================================================")
     console.log(`Hit at ${new Date().toISOString()}`);
+    console.log("Sending TEST")
+    res.json({
+      success: true,
+      command: "TEST",
+    });
+    
+    console.log("==================================================")
+    return;
 
     // Check if file was uploaded
     if (!req.file) {
