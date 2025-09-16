@@ -92,11 +92,11 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
       });
     }
 
-    // Always respond with 200 OK to the API call
-    res.status(200).json({
-      success: true,
-      message: "Audio received. Response will be sent on MQTT"
-    });    
+    // // Always respond with 200 OK to the API call
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Audio received. Response will be sent on MQTT"
+    // });    
 
     console.log(`📁 Processing audio file: ${req.file.filename}`);
 
@@ -137,13 +137,23 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
     const command = transcriptionService.analyzeTranscription(transcript.text);
 
     // Let the device know the command result
-    mqttService.publish(MQTT_TOPIC_COMMAND, command);
+    // mqttService.publish(MQTT_TOPIC_COMMAND, command);
+
+    res.json({
+        success: true,
+        command: command,
+    })
 
     console.log("=".repeat(50));
 
   } catch (error) {
     console.error('❌ Error Occurred:', error);
-    mqttService.publish(MQTT_TOPIC_COMMAND, "ERROR");
+
+    res.json({
+        success: false,
+        command: "ERROR",
+    })
+    // mqttService.publish(MQTT_TOPIC_COMMAND, "ERROR");
 
     
     // Save the audio file even if transcription failed
@@ -181,14 +191,14 @@ app.use((error, req, res, next) => {
 async function startServer() {
   try {
     // Connect to MQTT broker
-    await mqttService.connect();
+    // await mqttService.connect();
     
     // Start the HTTP server
     app.listen(PORT, () => {
       console.log(`🚀 Transcription server is running on http://localhost:${PORT}`);
       console.log(`📤 Upload .wav files to: http://localhost:${PORT}/transcribe`);
-      console.log(`🔗 MQTT broker: ${config.mqtt.brokerUrl}`);
-      console.log(`📡 MQTT topic: ${config.mqtt.topic}`);
+    //   console.log(`🔗 MQTT broker: ${config.mqtt.brokerUrl}`);
+    //   console.log(`📡 MQTT topic: ${config.mqtt.topic}`);
       console.log(`🔑 API Key: ${config.assemblyai.apiKey.substring(0, 8)}...`);
     });
   } catch (error) {
