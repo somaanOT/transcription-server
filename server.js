@@ -14,6 +14,8 @@ config.validate();
 const app = express();
 const PORT = config.server.port;
 
+const MQTT_TOPIC_COMMAND = "command";
+
 // Initialize services
 const mqttService = new MQTTService(config.mqtt.brokerUrl, config.mqtt.topic_prefix);
 const transcriptionService = new TranscriptionService(config.assemblyai.apiKey);
@@ -135,12 +137,13 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
     const command = transcriptionService.analyzeTranscription(transcript.text);
 
     // Let the device know the command result
-    mqttService.publish("command", command);
+    mqttService.publish(MQTT_TOPIC_COMMAND, command);
 
     console.log("=".repeat(50));
 
   } catch (error) {
     console.error('❌ Error Occurred:', error);
+    mqttService.publish(MQTT_TOPIC_COMMAND, "ERROR");
 
     
     // Save the audio file even if transcription failed
