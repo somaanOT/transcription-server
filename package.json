@@ -2,9 +2,11 @@
   "name": "test-bytes",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev": "nodemon server.js",
+    "mqtt:start": "cd MQTT && bin\\rmqttd.exe -f etc\\rmqtt.toml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +19,7 @@
     "express": "^5.1.0",
     "form-data": "^4.0.0",
     "localtunnel": "^2.0.2",
+    "mqtt": "^5.3.4",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.7.0",
     "nodemon": "^3.1.10"

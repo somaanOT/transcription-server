@@ -1,0 +1,1 @@
+bin\rmqttd.exe -f etc\rmqtt.toml
