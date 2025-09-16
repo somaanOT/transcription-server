@@ -93,7 +93,7 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
     // Always respond with 200 OK to the API call
     res.status(200).json({
       success: true,
-      message: "Audio received, processing via MQTT"
+      message: "Audio received. Response will be sent on MQTT"
     });    
 
     console.log(`📁 Processing audio file: ${req.file.filename}`);
